@@ -19,7 +19,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
+      - name: Build Docker Image
         run: |
-         docker build -t adetya2002/sisfo:latest -f DockerFileFolder/Dockerfile DockerFileFolder/
+          docker build -t adetya2002/sisfo:latest -f DockerFileFolder/Dockerfile DockerFileFolder/
+
+      - name: Push Docker Image
+        run: |
           docker push adetya2002/sisfo:latest
