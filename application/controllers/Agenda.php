@@ -44,9 +44,7 @@ class Agenda extends CI_Controller{
         
             $this->data['main_view']   = 'depan/v_agenda';
         
-            $this->load->view('theme/template',$this->data);
-        
-		      
+            $this->load->view('theme/template',$this->data);   
 	}
 
 }
