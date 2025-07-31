@@ -10,5 +10,5 @@
         <input type="number" name="jumlah" placeholder="Jumlah Bayar" class="form-control" required><br>
         <input type="file" name="bukti_transfer" class="form-control" required><br>
         <button type="submit" class="btn btn-success">Kirim</button>
-    </form>11111
+    </form>
 </div>
