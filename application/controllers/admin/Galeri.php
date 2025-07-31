@@ -141,7 +141,7 @@ class Galeri extends CI_Controller{
 		unlink($path);
 		$this->m_galeri->hapus_galeri($kode,$album);
 		echo $this->session->set_flashdata('msg','success-hapus');
-		redirect('admin/galeri');
+		redirect('admin/galeri');.....
 	}
 
 }
