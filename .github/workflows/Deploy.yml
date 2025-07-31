@@ -21,7 +21,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t adetya2002/sisfo:latest -f DockerFileFolder/Dockerfile DockerFileFolder/
+          docker build -t adetya2002/sisfo:latest -f DockerFileFolder/DockerFile DockerFileFolder/
 
       - name: Push Docker Image
         run: |
