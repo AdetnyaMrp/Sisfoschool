@@ -33,9 +33,5 @@ RUN mkdir -p writable && chmod -R 777 writable
 EXPOSE 80
 EXPOSE 443
 
-<<<<<<< HEAD:DockerFileFolder/DockerFile
 # Jalankan Apache di foreground
-=======
-# Jalankan Apache
->>>>>>> 8fb0f678752e4a603ce2b2bab6a908052346e049:DockerFileFolder/Dockerfile
 CMD ["apache2-foreground"]
