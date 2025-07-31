@@ -1,10 +1,10 @@
-# Gunakan PHP 8.1 dengan Apache
+# Gunakan PHP 8.2 dengan Apache
 FROM php:8.2-apache
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install dependensi yang diperlukan
+# Install dependensi sistem dan ekstensi PHP
 RUN apt-get update && apt-get install -y \
     unzip zip git curl libzip-dev libpng-dev libjpeg-dev libfreetype6-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
@@ -14,21 +14,24 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
 
-# Copy hanya composer.json dan composer.lock terlebih dahulu
-COPY composer.json composer.lock /var/www/html/
+# Salin composer.json dan composer.lock jika ada
+COPY composer.json /var/www/html/
+COPY composer.lock /var/www/html/  
 
-# Jalankan Composer Install terlebih dahulu agar lebih efisien dalam caching
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+# Jalankan Composer install (opsional: tambahkan pengecekan file jika error tanpa composer.lock)
+RUN if [ -f composer.json ]; then \
+        composer install --no-dev --optimize-autoloader --ignore-platform-reqs; \
+    fi
 
-# Baru kemudian copy seluruh file proyek ke dalam container
+# Salin semua file proyek ke dalam container
 COPY . /var/www/html
 
-# Pastikan folder writable ada sebelum mengubah izin
+# Buat folder writable dan ubah izinnya
 RUN mkdir -p writable && chmod -R 777 writable
 
-# Expose port 80 untuk web server
+# Expose port 80 (HTTP) dan 443 (HTTPS, bukan 433)
 EXPOSE 80
-EXPOSE 433
+EXPOSE 443
 
-# Jalankan Apache
+# Jalankan Apache di foreground
 CMD ["apache2-foreground"]
