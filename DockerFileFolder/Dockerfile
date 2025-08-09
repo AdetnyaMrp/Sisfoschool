@@ -1,37 +1,31 @@
-# Gunakan PHP 8.2 dengan Apache
-FROM php:8.2-apache
+FROM php:8.1-apache
 
-# Set working directory
-WORKDIR /var/www/html
+# Install ekstensi PHP yang diperlukan
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Install dependensi sistem dan ekstensi PHP
-RUN apt-get update && apt-get install -y \
-    unzip zip git curl libzip-dev libpng-dev libjpeg-dev libfreetype6-dev && \
-    docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd zip pdo pdo_mysql
+# Aktifkan mod_rewrite
+RUN a2enmod rewrite
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer
-
-# Salin composer.json dan composer.lock jika ada
-COPY composer.json /var/www/html/
-COPY composer.lock /var/www/html/  
-
-# Jalankan Composer install (opsional: tambahkan pengecekan file jika error tanpa composer.lock)
-RUN if [ -f composer.json ]; then \
-        composer install --no-dev --optimize-autoloader --ignore-platform-reqs; \
-    fi
-
-# Salin semua file proyek ke dalam container
+# Copy semua file project ke container
 COPY . /var/www/html
 
-# Buat folder writable dan ubah izinnya
-RUN mkdir -p writable && chmod -R 777 writable
+# Atur VirtualHost Apache
+RUN echo '<VirtualHost *:80>\n\
+    ServerAdmin webmaster@localhost\n\
+    DocumentRoot /var/www/html\n\
+    <Directory /var/www/html>\n\
+        Options Indexes FollowSymLinks\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>' > /etc/apache2/sites-enabled/000-default.conf
 
-# Expose port 80 (HTTP) dan 443 (HTTPS, bukan 433)
-EXPOSE 80
-EXPOSE 443
+# Perbaiki permission
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/application/cache
 
 # Jalankan Apache di foreground
 CMD ["apache2-foreground"]
