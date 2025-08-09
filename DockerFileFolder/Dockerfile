@@ -6,10 +6,10 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 # Aktifkan mod_rewrite
 RUN a2enmod rewrite
 
-# Copy project
+# Copy semua file project ke container
 COPY . /var/www/html
 
-# Apache config
+# Konfigurasi Apache untuk CI3
 RUN echo '<VirtualHost *:80>\n\
     ServerAdmin webmaster@localhost\n\
     DocumentRoot /var/www/html\n\
@@ -22,9 +22,10 @@ RUN echo '<VirtualHost *:80>\n\
     CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
 </VirtualHost>' > /etc/apache2/sites-enabled/000-default.conf
 
-# Perbaiki permission jika folder ada
-RUN if [ -d /var/www/html/application/cache ]; then chmod -R 777 /var/www/html/application/cache; fi \
-    && chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+# Perbaiki permission
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/application/cache \
+    && chmod -R 777 /var/www/html/uploads
 
 CMD ["apache2-foreground"]
