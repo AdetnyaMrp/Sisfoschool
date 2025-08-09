@@ -1,6 +1,11 @@
-<IfModule authz_core_module>
-    Require all denied
-</IfModule>
-<IfModule !authz_core_module>
-    allow from all
-</IfModule>
+RewriteEngine On
+RewriteBase /
+
+# Cegah akses langsung ke folder system
+RewriteCond %{REQUEST_URI} ^system.*
+RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+# Jika bukan file atau folder yang ada, teruskan ke index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?/$1 [L]

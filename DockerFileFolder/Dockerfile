@@ -6,10 +6,10 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 # Aktifkan mod_rewrite
 RUN a2enmod rewrite
 
-# Copy semua file project ke container
+# Copy semua file project
 COPY . /var/www/html
 
-# Konfigurasi Apache untuk CI3
+# Konfigurasi Apache untuk CodeIgniter 3
 RUN echo '<VirtualHost *:80>\n\
     ServerAdmin webmaster@localhost\n\
     DocumentRoot /var/www/html\n\
@@ -22,12 +22,13 @@ RUN echo '<VirtualHost *:80>\n\
     CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
 </VirtualHost>' > /etc/apache2/sites-enabled/000-default.conf
 
-# Perbaiki permission (gunakan "|| true" agar tidak error jika folder belum ada)
-RUN chown -R www-data:www-data /var/www/html || true \
-    && chmod -R 755 /var/www/html || true \
-    && mkdir -p /var/www/html/application/views/v_home \
-    && chmod -R 777 /var/www/html/application/cache || true \
-    && mkdir -p /var/www/html/uploads \
-    && chmod -R 777 /var/www/html/uploads || true
+# Pastikan folder penting ada
+RUN mkdir -p /var/www/html/application/cache /var/www/html/uploads
+
+# Perbaiki permission
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/application/cache \
+    && chmod -R 777 /var/www/html/uploads
 
 CMD ["apache2-foreground"]
