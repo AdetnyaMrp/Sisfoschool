@@ -14,17 +14,30 @@ class Files extends CI_Controller{
 
 
 	function index(){
-		
+
+		if($this->session->userdata('akses')=='1'){
 		$this->data['data']=$this->m_files->get_all_files();
         
         $this->data['breadcrumb']  = 'Data Download Files';
             
         $this->data['main_view']   = 'admin/v_files';
             
-        $this->load->view('theme/admintemplateG',$this->data);
-        
-		
+        $this->load->view('theme/admintemplate',$this->data);
+	}else{
+			if($this->session->userdata('akses')=='2'){
+            
+			$this->data['data']=$this->m_files->get_all_files();
+            
+            $this->data['breadcrumb']  = 'Data Download Files';
+            
+            $this->data['main_view']   = 'admin/v_files';
+            
+			$this->load->view('theme/admintemplateG',$this->data);
+		}
 	}
+
+}
+
 
 	function download(){
 		$id=$this->uri->segment(4);
