@@ -22,10 +22,12 @@ RUN echo '<VirtualHost *:80>\n\
     CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
 </VirtualHost>' > /etc/apache2/sites-enabled/000-default.conf
 
-# Perbaiki permission
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod -R 777 /var/www/html/application/cache \
-    && chmod -R 777 /var/www/html/uploads
+# Perbaiki permission (gunakan "|| true" agar tidak error jika folder belum ada)
+RUN chown -R www-data:www-data /var/www/html || true \
+    && chmod -R 755 /var/www/html || true \
+    && mkdir -p /var/www/html/application/cache \
+    && chmod -R 777 /var/www/html/application/cache || true \
+    && mkdir -p /var/www/html/uploads \
+    && chmod -R 777 /var/www/html/uploads || true
 
 CMD ["apache2-foreground"]
