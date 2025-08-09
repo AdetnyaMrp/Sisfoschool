@@ -25,7 +25,7 @@ RUN echo '<VirtualHost *:80>\n\
 # Perbaiki permission (gunakan "|| true" agar tidak error jika folder belum ada)
 RUN chown -R www-data:www-data /var/www/html || true \
     && chmod -R 755 /var/www/html || true \
-    && mkdir -p /var/www/html/application/cache \
+    && mkdir -p /var/www/html/application/views/v_home \
     && chmod -R 777 /var/www/html/application/cache || true \
     && mkdir -p /var/www/html/uploads \
     && chmod -R 777 /var/www/html/uploads || true
