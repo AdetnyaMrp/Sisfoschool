@@ -25,7 +25,7 @@ RUN echo '<VirtualHost *:80>\n\
 # Perbaiki permission
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
-    && chmod -R 777 /var/www/html/application/
+    && chmod -R 777 /var/www/html/application
 
 # Jalankan Apache di foreground
 CMD ["apache2-foreground"]
